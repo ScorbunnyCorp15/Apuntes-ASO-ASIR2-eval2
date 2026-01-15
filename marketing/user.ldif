@@ -1,0 +1,32 @@
+dn: uid=m_aner,ou=erabiltzaileak,ou=marketing,dc=aner,dc=local
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: person
+cn: m_aner
+uid: m_aner
+uidNumber: 5003
+gidNumber: 5002
+homeDirectory: /home/m_aner
+loginShell: /bin/bash
+userPassword: {SSHA}cFrAJFUF/3ITPeIzuPNdCkeVYM9EGYyI
+sn: m_aner
+mail: m_aner@aner.com
+givenName: m_aner
+
+dn: uid=m_bilbao,ou=erabiltzaileak,ou=marketing,dc=aner,dc=local
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: person
+cn: m_bilbao
+uid: m_bilbao
+uidNumber: 5004
+gidNumber: 5002
+homeDirectory: /home/m_bilbao
+loginShell: /bin/bash
+userPassword: {SSHA}4Vz3Nxb5okIBdcRcE/Jyai8Ovf7R4e03
+sn: m_bilbao
+mail: m_bilbao@aner.com
+givenName: m_bilbao
+

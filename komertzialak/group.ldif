@@ -1,0 +1,5 @@
+dn: cn=Gkomertzial,ou=komertzialak,dc=aner,dc=local
+objectClass: top
+objectClass: posixGroup
+gidNumber: 5004
+cn: Gkomertzial

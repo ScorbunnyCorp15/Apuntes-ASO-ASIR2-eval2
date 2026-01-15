@@ -1,0 +1,14 @@
+dn: ou=komertzialak,dc=aner,dc=local
+objectClass: top
+objectClass: organizationalUnit
+ou: komertzialak
+
+dn: ou=erabiltzaileak,ou=komertzialak,dc=aner,dc=local
+objectClass: top
+objectClass: organizationalUnit
+ou: erabiltzaileak
+
+dn: ou=ekipoak,ou=komertzialak,dc=aner,dc=local
+objectClass: top
+objectClass: organizationalUnit
+ou: ekipoak

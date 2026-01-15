@@ -1,0 +1,5 @@
+dn: cn=Gtailerra,ou=tailerra,dc=aner,dc=local
+objectClass: top
+objectClass: posixGroup
+gidNumber: 5001
+cn: Gtailerra

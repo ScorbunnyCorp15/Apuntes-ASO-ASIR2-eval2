@@ -1,0 +1,9 @@
+dn: uid=t_aner,ou=erabiltzaileak,ou=tailerra,dc=aner,dc=local
+changetype: modify
+replace: homeDirectory
+homeDirectory: /moviles/t_aner
+
+dn: uid=t_bilbao,ou=erabiltzaileak,ou=tailerra,dc=aner,dc=local
+changetype: modify
+replace: homeDirectory
+homeDirectory: /moviles/t_bilbao

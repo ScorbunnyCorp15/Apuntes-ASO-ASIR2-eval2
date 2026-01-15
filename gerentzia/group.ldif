@@ -1,0 +1,5 @@
+dn: cn=Gtailerra,ou=gerentzia,dc=aner,dc=local
+objectClass: top
+objectClass: posixGroup
+gidNumber: 5003
+cn: Ggerentzia

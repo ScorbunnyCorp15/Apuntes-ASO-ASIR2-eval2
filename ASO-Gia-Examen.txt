@@ -1,0 +1,404 @@
+Tener las dos maquinas en la misma red. El servidor tiene que estar
+con una ip estática y el el Desktop (o de Escritorio) puede estar con
+repartición de IP's dinamicas.
+
+Primeras comprobaciones:
+- Ping a as.com en el servidor --> ping as.com
+- Ping a as.com en el cliente --> ping as.com
+
+Lado servidor
+
+Para empezar tenemos que actualizar los repositorios del servidor y
+además mirar si el servidor esta en su ultima versión, para ello
+usaremmos el siguiente comando:
+
+sudo apt update && sudo apt upgrade -y && sudo apt dist-upgrade -y
+
+Despues de hacer esa comprobación, pocederemos a instalar los paquetes
+necesarios para la estructura de LDAP. El comando para instalarlos es
+el siguiente:
+
+sudo apt install slapd ldap-utils -y
+
+Nos saldra una ventana colorida emulada para estableces una contraseña
+usuario nuestro próximo dominio de LDAP. En nuestro caso pondremos está
+contraseña, vosotros devereis cambiarla en caso de tener planificada
+otra "qwer.1234".
+
+Para crear nuestro dominio necesitaremos volver a lanzar el
+configurador del paquete de slapd, para ello utilizaremos el siguiente
+comando:
+
+sudo dpkg-reconfigure slapd
+
+En el primer apartado que nos aprezca tendremos que decir que "NO"
+para poder reconfigurar el paquete.
+
+Después entremos que especificar el nombre de dominio que queremos crear
+en nuestro caso tiene que ser "<nuestro-nombre>.local". Si en tu caso
+en el equipo habeis terminado otra esturctura para el dominio la aplicais
+a la vuestra.
+
+Le introduciremos el nombre de la organización en nuestro caso sería
+"<nuestro-nombre>" pero eso varia dependendo de lo que tu necesites
+configurar.
+
+Le volvemos a especificar la contraseña de administrador que le dimos
+anteriormente. Y después confirmaremos la contraseña.
+
+Posteriormente le tendremos que decir que queremos que borre los datos que
+tubiese en la base de datos anterior para poder volcar nuestros datos,
+para ello le decimos que "SI" en esté punto. Y además le diremos que lo
+mueva (borrar la base de datos entera y crearnos una con los nuevos
+datos introducidos).
+
+Para comprbar que el LDAP se ha intalado y hecho la configuración inicial
+correctamente tendremos que poner el siguiente comando:
+
+sudo slapcat
+
+Posteriormente montaremos la sigiente estuctura de momento para nuestro
+dominio:
+
+- Taller
+    - Usuarios
+        - t_<nuestro-nombre>
+        - t_<nuestro-apellido>
+    - Equipos
+    - Gtaller
+- Marketing
+    - Usuarios
+        - m_<nuestro-nombre>
+        - m_<nuestro-apellido>
+    - Equipos
+    - Gmarketing
+
+En resumen vamos ha hacer una etructura de 2 unidades organiztivas
+principales que determinaran los departamentos, después dentro quearemos
+otras 2 unidades organizativas para ordenar los ordenadores de ese
+departamento y los usuarios de ese departamento, también crearemos un
+grupo general para los usuarios de dicho departamento y dentro de cada
+unidad organizativa de usuarios intoduciremos 2 usuarios.
+
+Toda estra estuctura la vasis a tener disponible tanto en este documeto
+como en los archivos con extension .ldif ya preparados.
+
+Departemento taller
+
+ou.ldif:
+
+dn: ou=tailerra,dc=aner,dc=local
+objectClass: top
+objectClass: organizationalUnit
+ou: tailerra
+
+dn: ou=erabiltzaileak,ou=tailerra,dc=aner,dc=local
+objectClass: top
+objectClass: organizationalUnit
+ou: erabiltzaileak
+
+dn: ou=ekipoak,ou=tailerra,dc=aner,dc=local
+objectClass: top
+objectClass: organizationalUnit
+ou: ekipoak
+
+group.ldif
+
+dn: cn=Gtailerra,ou=tailerra,dc=aner,dc=local
+objectClass: top
+objectClass: posixGroup
+gidNumber: 5001
+cn: Gtailerra
+
+user.ldif
+
+dn: uid=t_aner,ou=erabiltzaileak,ou=tailerra,dc=aner,dc=local
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: person
+cn: t_aner
+uid: t_aner
+uidNumber: 5001
+gidNumber: 5001
+homeDirectory: /home/t_aner
+loginShell: /bin/bash
+userPassword: {SSHA}SizYMgKZdpcheiWvv3/DC3SDen/sG3vU
+sn: t_aner
+mail: t_aner@aner.com
+givenName: t_aner
+
+dn: uid=t_bilbao,ou=erabiltzaileak,ou=tailerra,dc=aner,dc=local
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: person
+cn: t_bilbao
+uid: t_bilbao
+uidNumber: 5002
+gidNumber: 5001
+homeDirectory: /home/t_bilbao
+loginShell: /bin/bash
+userPassword: {SSHA}4kDxMMuW9j1X37l29DD8/lCnj7aNy8qj
+sn: t_bilbao
+mail: t_bilbao@aner.com
+givenName: t_bilbao
+
+Departamento marketing
+
+ou.ldif
+
+dn: ou=marketing,dc=aner,dc=local
+objectClass: top
+objectClass: organizationalUnit
+ou: marketing
+
+dn: ou=erabiltzaileak,ou=marketing,dc=aner,dc=local
+objectClass: top
+objectClass: organizationalUnit
+ou: erabiltzaileak
+
+dn: ou=ekipoak,ou=marketing,dc=aner,dc=local
+objectClass: top
+objectClass: organizationalUnit
+ou: ekipoak
+
+group.ldif
+
+dn: cn=Gmarketing,ou=marketing,dc=aner,dc=local
+objectClass: top
+objectClass: posixGroup
+gidNumber: 5002
+cn: Gmarketing
+
+user.ldif
+
+dn: uid=m_aner,ou=erabiltzaileak,ou=marketing,dc=aner,dc=local
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: person
+cn: m_aner
+uid: m_aner
+uidNumber: 5003
+gidNumber: 5002
+homeDirectory: /home/m_aner
+loginShell: /bin/bash
+userPassword: {SSHA}cFrAJFUF/3ITPeIzuPNdCkeVYM9EGYyI
+sn: m_aner
+mail: m_aner@aner.com
+givenName: m_aner
+
+dn: uid=m_bilbao,ou=erabiltzaileak,ou=marketing,dc=aner,dc=local
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: person
+cn: m_bilbao
+uid: m_bilbao
+uidNumber: 5004
+gidNumber: 5002
+homeDirectory: /home/m_bilbao
+loginShell: /bin/bash
+userPassword: {SSHA}4Vz3Nxb5okIBdcRcE/Jyai8Ovf7R4e03
+sn: m_bilbao
+mail: m_bilbao@aner.com
+givenName: m_bilbao
+
+Nota: Por seguridad las contraseñas de los usuarios como ven estan 
+encriptadas para que no se puedan descifrar en texto plano.
+
+Es recomendable en en servidor crear primero una carpeta por cada
+departamento de la estructura y meter todos los archivos que vamos a
+añadir configuraciones dentro de cada respctiva carpeta segun el 
+departamento correspondiente.
+
+Para añadir las difrentes configuraciones tendremos que utilizar el
+siguiente comando:
+
+sudo ldapadd -x -D cn=admin,dc=<nuestro-nombre>,dc=local -W -f
+<carpeta-departamento>/<nombre-archivo-configuracion>.ldif
+
+Nos pedira la contraseña que le configuramos en a la hora de la
+instalación para poder guardar los cambios.
+
+Si todo es correcto y no ha habido errores nos dira que la configuración
+habra sido añadida stisfactoriamente. Si no indicara el caracter y la
+posición donde estubiera el error.
+
+Como comporbamos que está todo correctamente metido, pues con el mismo
+comando que lanzamos al final de la instalación de LDAP:
+
+sudo slapcat
+
+Para crear las contraseñas cifradas y añadirlas a las ultimas lineas de
+los ficheros para no comernos la cabeza, se haría con el siguiente
+comando:
+
+slappasswd >> <carpeta-departamento>/<nombre-archivo-configuración>.ldif
+
+Cuando tengamos toda la estuctura de carpetas, usuarios y grupos añadida,
+procederemos ha hacer las configuraciones pertinentes en el cliente.
+
+Lado Cliente:
+
+Para empezar tenemos que actualizar los repositorios del cliente y
+además mirar si el cliente esté en su ultima versión, para ello
+usaremmos el siguiente comando:
+
+sudo apt update && sudo apt upgrade -y && sudo apt dist-upgrade -y
+
+Despues porcederemos a instalr los paquetes necesarios que necesite el
+cliente para comonicarse con el servidor LDAP, para ello usaremos el
+siguiente comando:
+
+sudo apt install libnss-ldap libpam-ldap ldap-utils -y
+
+Nos saldra un asistente que lo primero que nos pedira es que tendremos
+que especificar el identificador uniforme de nuestro dominio, para ello
+tendremos que escribir los siguiente:
+
+ldap://<IP-servidor> (la dirección IP estatica que tenga configurada)
+
+Despues tendremos que decirle cual es nuestro dominio, en nuestro caso
+sería "dc=<nuestro-nombre>,dc=local" pero esto puede variar dependiendo
+del nombre de dominio que hayais especificado en el servidor.
+
+Selecionaremos que vamos a usar la version 3 de las dos versiones que
+nos proporcionan.
+
+En el siguiente cuadro deberemos decir que si por si en algun momento
+queremos configurar perfiles moviles para los usuarios de LDAP, entonces
+le diremos que "SI".
+
+Despues le decimos que para que acceda a la base de datos no tiene
+necesidad de entrar mediante un login, para ello le decimos que
+"NO".
+
+Tendremos que especificarle que cual es nuetro usuario administrador del
+dominio que hemos creado para el LDAP.
+
+cn=admin,dc=<nuestro-nombre>,dc=local
+
+Y para terminar con esté asistente le pasaremos la contraseña del usuario
+administrador para que pueda terminar de instalar los paquetes.
+
+Las configuraciones siguientes son muy delicadas así que antes de realizar
+cualquier cambio en esos archivos tendremos que hacer una copia de ellos,
+para ello tendremos que ejecutar la siguiente sentencia de comando:
+
+sudo cp /<ruta-completa-hasta-el-fichero>/<nombre-del-fichero>
+/<ruta-completa-hasta-el-fichero>/<nombre-del-fichero>.bak
+
+El primer archivo que deberemos tocar es el nsswitch que esta dentro del
+directorio /etc/.
+
+Que contendra lo siguiente:
+
+# /etc/nsswitch.conf
+#
+# Example configuration of GNU Name Service Switch functionality.
+# If you have the `glibc-doc-reference' and `info' packages installed, try:
+# `info libc "Name Service Switch"' for information about this file.
+
+group:          files systemd sss
+shadow:         files systemd sss
+gshadow:        files systemd
+
+hosts:          files mdns4_minimal [NOTFOUND=return] dns
+networks:       files
+
+protocols:      db files
+services:       db files sss
+ethers:         db files
+rpc:            db files
+
+netgroup:       nis sss
+automount:  sss
+
+Y tendremos que remplazar el texto de "systemd" por "ldap" el los
+primeros 3 parametros.
+
+Para comprobar que todo haya ido bien hasta ahora, tendremos que
+ejecutar el siguiente comando que lo que hace es mostrar todos los
+usuarios y grupos determinados por el cliente a demás de los usuarios
+añadidos en el servidor de LDAP anteriormente, para ello usaremos el
+siguiente comando:
+
+sudo getent passwd
+
+Si todo ha ido bien tendrian que aparecer los 4 usuarios con sus
+respectivos numreos de identificador de usuario y de grupo.
+
+Despue facilitaremos la creación de las carpetas home de los usuarios de
+LDAP en el mismo cliente. Para ello deberemos editar el archivo
+"common-session" en la ruta "/etc/pam.d/".
+
+El contenido del archivo es el siguiente:
+
+#
+# /etc/pam.d/common-session - session-related modules common to all services
+#
+# This file is included from other service-specific PAM config files,
+# and should contain a list of modules that define tasks to be performed
+# at the start and end of interactive sessions.
+#
+# As of pam 1.0.1-6, this file is managed by pam-auth-update by default.
+# To take advantage of this, it is recommended that you configure any
+# local modules either before or after the default block, and use
+# pam-auth-update to manage selection of other modules.  See
+# pam-auth-update(8) for details.
+
+# here are the per-package modules (the "Primary" block)
+session [default=1]                     pam_permit.so
+# here's the fallback if no module succeeds
+session requisite                       pam_deny.so
+# prime the stack with a positive return value if there isn't one already;
+# this avoids us returning an error just because nothing sets a success code
+# since the modules above will each just jump around
+session required                        pam_permit.so
+# The pam_umask module will set the umask according to the system default in
+# /etc/login.defs and user settings, solving the problem of different
+# umask settings with different shells, display managers, remote sessions etc.
+# See "man pam_umask".
+session optional                        pam_umask.so
+# and here are more per-package modules (the "Additional" block)
+session required        pam_unix.so
+session optional                        pam_sss.so
+session optional                        pam_ldap.so
+session optional        pam_systemd.so
+# end of pam-auth-update config
+
+Y tendremos que añadir al final del fichero la siguiente linea:
+
+session optional       pam_mkhomedir.so skel=/etc/skel umask=077
+
+Para comporbar que todo funciona y que crea la carpta home de los usuarios
+tendremos que realizar los siguientes comandos para los 4 usuarios que
+demomento estan registrados en nuestro sistema de LDAP:
+
+sudo su - t_<nuestro-nombre>
+sudo su - t_<nuestro-apellido>
+sudo su - m_<nuestro-nombre>
+sudo su - m_<nuestro-apellido>
+
+Para poder tener acceso de manera grafica a los usuarios deberemos instalar
+algun paquete adicional que no instalamos anteriormente. El comando para
+instalar ese paquete es el siguiente:
+
+sudo apt install nslcd -y
+
+Se empezara a instalar y nos aparecera un asistente que en principio nos
+pedira la misma información que nos pido al empezar a instalar los paquetes
+necesarios para la vinculación con LDAP en el cliente. Solo tendremos que
+darle a siguiente todo el rato hasta que se termine de instalar.
+
+Para poder conectarnos lo primero que tendremos que hacer es reinicar la
+maquina y cuando cargue la pantalla del login, tendremos que decirle
+"No esta en la lista" le daremos un nombre de usuario del domino LDAP
+y pondremos la contraseña, si todo va bien entraremos de forma grafica
+sin problemas a un usuario que no es interno del sistema.
+
+Y al cerrar sesión lo que conseguiremos tambien es que ya se quede guardado
+la sesión del usuario de LDAP en la lista del login junto al usuario propio
+del sistema.

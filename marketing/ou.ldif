@@ -1,0 +1,14 @@
+dn: ou=marketing,dc=aner,dc=local
+objectClass: top
+objectClass: organizationalUnit
+ou: marketing
+
+dn: ou=erabiltzaileak,ou=marketing,dc=aner,dc=local
+objectClass: top
+objectClass: organizationalUnit
+ou: erabiltzaileak
+
+dn: ou=ekipoak,ou=marketing,dc=aner,dc=local
+objectClass: top
+objectClass: organizationalUnit
+ou: ekipoak

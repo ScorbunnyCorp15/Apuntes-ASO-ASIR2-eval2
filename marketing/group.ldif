@@ -1,0 +1,5 @@
+dn: cn=Gmarketing,ou=marketing,dc=aner,dc=local
+objectClass: top
+objectClass: posixGroup
+gidNumber: 5002
+cn: Gmarketing
