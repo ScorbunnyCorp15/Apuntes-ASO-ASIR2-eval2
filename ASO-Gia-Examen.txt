@@ -554,3 +554,12 @@ userPassword: {SSHA}a0ex36PBcrIaOZJswiME9IGp0v9Khufg
 sn: c_<nuestro-apellido>
 mail: c_<nuestro-apellido>@<nuestro-nombre>.com
 givenName: c_<nuestro-apellido>
+
+Por ultimo crearemos los las carpetas home de los nuevos usuarios en el
+cliente que tengamos unido al dominio de LDAP con los siguientes comandos:
+
+- sudo su - g_<nuestro-nombre>
+- sudo su - g_<nuestro-apellido>
+- sudo su - c_<nuestro-nombre>
+- sudo su - c_<nuestro-apellido>
+
