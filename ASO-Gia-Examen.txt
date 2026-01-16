@@ -563,7 +563,7 @@ cliente que tengamos unido al dominio de LDAP con los siguientes comandos:
 - sudo su - c_<nuestro-nombre>
 - sudo su - c_<nuestro-apellido>
 
-NFS
+NFS Linux
 
 Perfiles Moviles:
 
@@ -669,3 +669,62 @@ Y nos deberia aparecer una carpeta con el nombre de nuesto
 usuario y además de que esten creadas la caretas de cada
 usuario cunado se autentica en el sistema.
 
+NFS Windows:
+
+Servidor:
+
+Para empezar deberemos tener cread una caprta web en la ruta
+"/var/www/web" y con sus correspondientes permisos locales
+y usuario y grupo propietarios, para ello usaremos los
+siguientes comandos:
+
+- sudo mkdir -p /var/www/web
+- sudo chown nobody:nogroup /var/www/web
+- sudo chmod 777 /var/www/web
+
+El "-p" se usa para que se cree la ruta de entera si no
+exixte ninguna carpeta intermedia.
+
+Seguidamente nos meteremos en el archivo /etc/exports con
+el comando:
+
+- sudo nano /etc/exports
+
+Insertaremos la siguiente linea al final del archivo.
+
+- /var/www/web *(rw,sync,no_root_squash,no_subtree_check)
+
+Para que la configuracion surja efecto tendremos que
+ejecutar los siguientes para exportar los recusos
+configurados en el /etc/exports, reiniciar el servicio de
+NFS y ver si el servicio está iniciado correctamente:
+
+- sudo exportfs -a
+- sudo systemctl restart nfs-kernel-server
+- sudo systemctl status nfs-kernel-server
+
+Cliente:
+
+Lo primero tendremmos que refisar si tenemos activado la 
+caracteristica de Servicios para NFS y Cliente para NFS.
+Para ello lo haremos mediante lo siguiente:
+
+Panel de control > Programas > Programas y caracteristica
+> Activar y desactivar caracteristicas de Windows
+
+
+Abiendo revisadoeso tendremos que abir el CMD (linea de
+comandos de windows) para realizar 2 comandos uno para
+iniciar el cliente nfs en windows y otro para montar esa
+carpeta en una unidad en el explorador de archivos.
+
+ADVERTENCIA: La ip del segundo comando puede variar
+dependiendo la infraestructura.
+
+- nfsadmin client localhost start
+- mount -o anon,nolock,rw,sync,
+casesensitive \\192.168.1.5\var\www\web *
+
+Si abres el explorador de archivos y punsas en "Este
+equipo" y aparecera mapeada en una categoria llamada
+"Unidades de red".
