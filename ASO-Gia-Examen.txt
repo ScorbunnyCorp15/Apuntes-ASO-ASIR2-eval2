@@ -87,85 +87,85 @@ Departemento taller
 
 ou.ldif:
 
-dn: ou=tailerra,dc=aner,dc=local
+dn: ou=taller,dc=<nuestro-nombre>,dc=local
 objectClass: top
 objectClass: organizationalUnit
-ou: tailerra
+ou: taller
 
-dn: ou=erabiltzaileak,ou=tailerra,dc=aner,dc=local
+dn: ou=usuarios,ou=taller,dc=<nuestro-nombre>,dc=local
 objectClass: top
 objectClass: organizationalUnit
-ou: erabiltzaileak
+ou: usuarios
 
-dn: ou=ekipoak,ou=tailerra,dc=aner,dc=local
+dn: ou=maquinas,ou=taller,dc=<nuestro-nombre>,dc=local
 objectClass: top
 objectClass: organizationalUnit
-ou: ekipoak
+ou: maquinas
 
 group.ldif
 
-dn: cn=Gtailerra,ou=tailerra,dc=aner,dc=local
+dn: cn=Gtaller,ou=taller,dc=<nuestro-nombre>,dc=local
 objectClass: top
 objectClass: posixGroup
 gidNumber: 5001
-cn: Gtailerra
+cn: Gtaller
 
 user.ldif
 
-dn: uid=t_aner,ou=erabiltzaileak,ou=tailerra,dc=aner,dc=local
+dn: uid=t_<nuestro-nombre>,ou=usuarios,ou=taller,dc=<nuestro-nombre>,dc=local
 objectClass: top
 objectClass: posixAccount
 objectClass: inetOrgPerson
 objectClass: person
-cn: t_aner
-uid: t_aner
+cn: t_<nuestro-nombre>
+uid: t_<nuestro-nombre>
 uidNumber: 5001
 gidNumber: 5001
-homeDirectory: /home/t_aner
+homeDirectory: /home/t_<nuestro-nombre>
 loginShell: /bin/bash
 userPassword: {SSHA}SizYMgKZdpcheiWvv3/DC3SDen/sG3vU
-sn: t_aner
-mail: t_aner@aner.com
-givenName: t_aner
+sn: t_<nuestro-nombre>
+mail: t_<nuestro-nombre>@<nuestro-nombre>.com
+givenName: t_<nuestro-nombre>
 
-dn: uid=t_bilbao,ou=erabiltzaileak,ou=tailerra,dc=aner,dc=local
+dn: uid=t_<nuestro-apellido>,ou=usuarios,ou=taller,dc=<nuestro-nombre>,dc=local
 objectClass: top
 objectClass: posixAccount
 objectClass: inetOrgPerson
 objectClass: person
-cn: t_bilbao
-uid: t_bilbao
+cn: t_<nuestro-apellido>
+uid: t_<nuestro-apellido>
 uidNumber: 5002
 gidNumber: 5001
-homeDirectory: /home/t_bilbao
+homeDirectory: /home/t_<nuestro-apellido>
 loginShell: /bin/bash
 userPassword: {SSHA}4kDxMMuW9j1X37l29DD8/lCnj7aNy8qj
-sn: t_bilbao
-mail: t_bilbao@aner.com
-givenName: t_bilbao
+sn: t_<nuestro-apellido>
+mail: t_<nuestro-apellido>@<nuestro-nombre>.com
+givenName: t_<nuestro-apellido>
 
 Departamento marketing
 
 ou.ldif
 
-dn: ou=marketing,dc=aner,dc=local
+dn: ou=marketing,dc=<nuestro-nombre>,dc=local
 objectClass: top
 objectClass: organizationalUnit
 ou: marketing
 
-dn: ou=erabiltzaileak,ou=marketing,dc=aner,dc=local
+dn: ou=usuarios,ou=marketing,dc=<nuestro-nombre>,dc=local
 objectClass: top
 objectClass: organizationalUnit
-ou: erabiltzaileak
+ou: usuarios
 
-dn: ou=ekipoak,ou=marketing,dc=aner,dc=local
+dn: ou=maquinas,ou=marketing,dc=<nuestro-nombre>,dc=local
 objectClass: top
 objectClass: organizationalUnit
-ou: ekipoak
+ou: maquinas
 
 group.ldif
 
-dn: cn=Gmarketing,ou=marketing,dc=aner,dc=local
+dn: cn=Gmarketing,ou=marketing,dc=<nuestro-nombre>,dc=local
 objectClass: top
 objectClass: posixGroup
 gidNumber: 5002
@@ -173,37 +173,37 @@ cn: Gmarketing
 
 user.ldif
 
-dn: uid=m_aner,ou=erabiltzaileak,ou=marketing,dc=aner,dc=local
+dn: uid=m_<nuestro-nombre>,ou=usuarios,ou=marketing,dc=<nuestro-nombre>,dc=local
 objectClass: top
 objectClass: posixAccount
 objectClass: inetOrgPerson
 objectClass: person
-cn: m_aner
-uid: m_aner
+cn: m_<nuestro-nombre>
+uid: m_<nuestro-nombre>
 uidNumber: 5003
 gidNumber: 5002
-homeDirectory: /home/m_aner
+homeDirectory: /home/m_<nuestro-nombre>
 loginShell: /bin/bash
 userPassword: {SSHA}cFrAJFUF/3ITPeIzuPNdCkeVYM9EGYyI
-sn: m_aner
-mail: m_aner@aner.com
-givenName: m_aner
+sn: m_<nuestro-nombre>
+mail: m_<nuestro-nombre>@<nuestro-nombre>.com
+givenName: m_<nuestro-nombre>
 
-dn: uid=m_bilbao,ou=erabiltzaileak,ou=marketing,dc=aner,dc=local
+dn: uid=m_<nuestro-apellido>,ou=usuarios,ou=marketing,dc=<nuestro-nombre>,dc=local
 objectClass: top
 objectClass: posixAccount
 objectClass: inetOrgPerson
 objectClass: person
-cn: m_bilbao
-uid: m_bilbao
+cn: m_<nuestro-apellido>
+uid: m_<nuestro-apellido>
 uidNumber: 5004
 gidNumber: 5002
-homeDirectory: /home/m_bilbao
+homeDirectory: /home/m_<nuestro-apellido>
 loginShell: /bin/bash
 userPassword: {SSHA}4Vz3Nxb5okIBdcRcE/Jyai8Ovf7R4e03
-sn: m_bilbao
-mail: m_bilbao@aner.com
-givenName: m_bilbao
+sn: m_<nuestro-apellido>
+mail: m_<nuestro-apellido>@<nuestro-nombre>.com
+givenName: m_<nuestro-apellido>
 
 Nota: Por seguridad las contraseñas de los usuarios como ven estan 
 encriptadas para que no se puedan descifrar en texto plano.
@@ -239,6 +239,14 @@ slappasswd >> <carpeta-departamento>/<nombre-archivo-configuración>.ldif
 
 Cuando tengamos toda la estuctura de carpetas, usuarios y grupos añadida,
 procederemos ha hacer las configuraciones pertinentes en el cliente.
+
+Para poder relizar busquedas sobre diferentes elementos del dominio,
+tendremos que usar los siguientes comandos. Yo dare 2 ejemplos que son
+un comando para ver todo lo que tienes en el dominio y otro que solo
+puedas ver todos los usuarios que tienes añadidos al dominio:
+
+- sudo ldapsearch -xLLL -b "dc=<nuestro-nombre>,dc=local"
+- sudo ldapsearch -xLLL -b "dc=<nuestro-nombre>,dc=local" uid=*
 
 Lado Cliente:
 
@@ -382,7 +390,7 @@ sudo su - t_<nuestro-apellido>
 sudo su - m_<nuestro-nombre>
 sudo su - m_<nuestro-apellido>
 
-Para poder tener acceso de manera grafica a los usuarios deberemos instalar
+Para poder tener acceso de m<nuestro-nombre>a grafica a los usuarios deberemos instalar
 algun paquete adicional que no instalamos anteriormente. El comando para
 instalar ese paquete es el siguiente:
 
@@ -402,3 +410,147 @@ sin problemas a un usuario que no es interno del sistema.
 Y al cerrar sesión lo que conseguiremos tambien es que ya se quede guardado
 la sesión del usuario de LDAP en la lista del login junto al usuario propio
 del sistema.
+
+Volvemos al servidor
+
+Cuando hayamos terminado con toda la configuiracion en el lado del cliente
+volveremos al servidor para terminar de subir la estructura de nuesto
+dominio que es el siguiente:
+
+- Gerente
+    - Usuarios
+        - g_<nuestro-nombre>
+        - g_<nuestro-apellido>
+    - Equipos
+    - Ggerente
+- Comercial
+    - Usuarios
+        - c_<nuestro-nombre>
+        - c_<nuestro-apellido>
+    - Equipos
+    - Gcomerccial
+
+Para completar la estuctura tambien os dejare aquí el codigo de cada archivo
+de configuración:
+
+Gerente:
+
+ou.ldif
+
+dn: ou=gerencia,dc=<nuestro-nombre>,dc=local
+objectClass: top
+objectClass: organizationalUnit
+ou: gerencia
+
+dn: ou=usuarios,ou=gerencia,dc=<nuestro-nombre>,dc=local
+objectClass: top
+objectClass: organizationalUnit
+ou: usuarios
+
+dn: ou=maquinas,ou=gerencia,dc=<nuestro-nombre>,dc=local
+objectClass: top
+objectClass: organizationalUnit
+ou: maquinas
+
+group.ldif
+
+dn: cn=Ggerencia,ou=gerencia,dc=<nuestro-nombre>,dc=local
+objectClass: top
+objectClass: posixGroup
+gidNumber: 5003
+cn: Ggerentzia
+
+user.ldif
+
+dn: uid=g_<nuestro-nombre>,ou=usuarios,ou=gerencia,dc=<nuestro-nombre>,dc=local
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: person
+cn: g_<nuestro-nombre>
+uid: g_<nuestro-nombre>bilbao
+uidNumber: 5005
+gidNumber: 5003
+homeDirectory: /home/g_<nuestro-nombre>
+loginShell: /bin/bash
+userPassword: {SSHA}HKgzwjabfRj+zzZfbCh3tzhksBXqciFy
+sn: g_<nuestro-nombre>
+mail: g_<nuestro-nombre>@<nuestro-nombre>.com
+givenName: g_<nuestro-nombre>
+
+dn: uid=g_<nuestro-apellido>,ou=usuarios,ou=gerencia,dc=<nuestro-nombre>,dc=local
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: person
+cn: g_<nuestro-apellido>
+uid: g_<nuestro-apellido>
+uidNumber: 5006
+gidNumber: 5003
+homeDirectory: /home/g_<nuestro-apellido>
+loginShell: /bin/bash
+userPassword: {SSHA}tXLVZkUbvmqHjzgbIkt28ScK/LN6WHZ4
+sn: g_<nuestro-apellido>
+mail: g_<nuestro-apellido>@<nuestro-nombre>.com
+givenName: g_<nuestro-apellido>
+
+Comercial:
+
+ou.ldif
+
+dn: ou=comercial,dc=<nuestro-nombre>,dc=local
+objectClass: top
+objectClass: organizationalUnit
+ou: comercial
+
+dn: ou=usuarios,ou=comercial,dc=<nuestro-nombre>,dc=local
+objectClass: top
+objectClass: organizationalUnit
+ou: usuarios
+
+dn: ou=maquinas,ou=comercial,dc=<nuestro-nombre>,dc=local
+objectClass: top
+objectClass: organizationalUnit
+ou: maquinas
+
+group.ldif:
+
+dn: cn=Gcomercial,ou=comercial,dc=<nuestro-nombre>,dc=local
+objectClass: top
+objectClass: posixGroup
+gidNumber: 5004
+cn: Gcomercial
+
+user.ldif
+
+dn: uid=c_<nuestro-nombre>,ou=usuarios,ou=comercial,dc=<nuestro-nombre>,dc=local
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: person
+cn: c_<nuestro-nombre>
+uid: c_<nuestro-nombre>
+uidNumber: 5007
+gidNumber: 5004
+homeDirectory: /home/c_<nuestro-nombre>
+loginShell: /bin/bash
+userPassword: {SSHA}aMhvnpkALZZ9XTk+bNqFLDSsFGXm4dc5
+sn: c_<nuestro-nombre>
+mail: c_<nuestro-nombre>@<nuestro-nombre>.com
+givenName: c_<nuestro-nombre>
+
+dn: uid=c_<nuestro-apellido>,ou=usuarios,ou=comercial,dc=<nuestro-nombre>,dc=local
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: person
+cn: c_<nuestro-apellido>
+uid: c_<nuestro-apellido>
+uidNumber: 5008
+gidNumber: 5004
+homeDirectory: /home/c_<nuestro-apellido>
+loginShell: /bin/bash
+userPassword: {SSHA}a0ex36PBcrIaOZJswiME9IGp0v9Khufg
+sn: c_<nuestro-apellido>
+mail: c_<nuestro-apellido>@<nuestro-nombre>.com
+givenName: c_<nuestro-apellido>
