@@ -468,7 +468,7 @@ objectClass: posixAccount
 objectClass: inetOrgPerson
 objectClass: person
 cn: g_<nuestro-nombre>
-uid: g_<nuestro-nombre>bilbao
+uid: g_<nuestro-nombre><nuestro-apellido>
 uidNumber: 5005
 gidNumber: 5003
 homeDirectory: /home/g_<nuestro-nombre>
@@ -562,4 +562,110 @@ cliente que tengamos unido al dominio de LDAP con los siguientes comandos:
 - sudo su - g_<nuestro-apellido>
 - sudo su - c_<nuestro-nombre>
 - sudo su - c_<nuestro-apellido>
+
+NFS
+
+Perfiles Moviles:
+
+Servidor:
+
+Lo primero que tenemos que hacer es instalr el servicio
+nfs en el servidor para ello usaremos el siguinete comando
+para la instalación:
+
+- sudo apt insrtall nfs-kernel-server -y
+
+Después, tendremos que crear una carpeta para almacenar
+las carpetas home de los usuarios en un recurso compartido,
+con ello conseguiremos configurar los perfiles moviles. Para
+ello usaremos los siguientes comandos para crear la carpeta
+y cambiar el usuario y el grupo propietario de la carpeta
+que creemos para los perfiles moviles:
+
+- sudo mkdir /moviles
+- sudo chown nobody:nogroup /moviles/
+
+Luego tendremos que modificar el archivo /etc/exports para
+añadir una linea al final del archivo. Para entrar usaremos
+el siguiente comando he insertaremos la siguiente linea al
+final:
+
+- sudo nano /etc/exports
+
+/moviles *(rw,sync,no_root_squash,no_subtree_check)
+
+Para aplicar la configuracion realizaremos los siguientes
+3 comandos, uno para exportar todos los recursos compartidos
+que esten especificados en el /etc/exports, otro para
+reiniciar el servicio nfs y otro para ver que el servicio
+nfs esté correntamente funcionando.
+
+- sudo exportfs -a
+- sudo systemctl restart nfs-kernel-server
+- sudo systemctl status nfs-kernel-server
+
+Para que los cambios surjan efecto tendremos que usar los
+archivos "userChange.ldif" que esta cada uno dentro de
+cada una de las carpetas de cada departamento yo os dare
+un ejemplo con un solo departamento pero vosotros tendriais
+que realizarlo segun todos los departamentos de la empresa
+que esten dentro del dominio LDAP:
+
+Taller/userChange.ldif:
+
+dn: uid=t_<nuestro-nombre>,ou=usuarios,ou=taller,dc=<nuestro-nombre>,dc=local
+changetype: modify
+replace: homeDirectory
+homeDirectory: /moviles/t_<nuestro-nombre>
+
+dn: uid=t_<nuestro-apellido>,ou=usuarios,ou=taller,dc=<nuestro-nombre>,dc=local
+changetype: modify
+replace: homeDirectory
+homeDirectory: /moviles/t_<nuestro-apellido>
+
+Para que esta configuración surja efecto en el dominio LDAP
+tendremos que usar el siguiente comando:
+
+sudo ldapmodify -x -D cn=admin,dc=<nuestro-nombre>,dc=local -W -f
+<nombre-departamento>/<nombre-del-archivo>.ldif
+
+Cliente:
+
+Deberemos crear una carpeta para almacenar hay las
+carpetas home de los usuarios, que mediante un fichero luego
+configuraremos que se sincronice que en recurso compartido
+del servidor para que cumpla la funcion de perfil movil.
+
+Para crear la carpeta y modificarle los permisos usaremos
+los siguientes comandos:
+
+- sudo mkdir /moviles
+- sudo chmos 777 /moviles/
+
+Despues haremos una copia del un fichero que posteriormente
+editaremos para poder sincronizar el contenido de nuesta
+carpeta local moviles con la del servidor, para ello haremos
+lo siguiente:
+
+- sudo cp /etc/fstab /etc/fstab.bak
+
+Y posteriormente entraremos para poder añadir la linea.
+ADVERTENCIA: la linea que añadiremos contiene una ip,
+esa ip puede variar dependiendo de cual sea la ip de tu 
+servidor.
+
+- sudo nano /etc/fstab
+
+10.0.23.5:/moviles /moviles nfs auto,noatime,nolock,bg,
+nfsvers=3,intr,tcp,actimeo=1800 0 0
+
+Para la comporbacion nos meteremos al usuario de forma
+grafica, cerraremos sesion, no meteremos con el usuario
+predefinido del sistema y ejecutaremos el sigiente comando:
+
+- sudo tree /moviles/
+
+Y nos deberia aparecer una carpeta con el nombre de nuesto
+usuario y además de que esten creadas la caretas de cada
+usuario cunado se autentica en el sistema.
 
