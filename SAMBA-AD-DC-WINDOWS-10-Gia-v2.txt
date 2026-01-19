@@ -1,0 +1,94 @@
+En este docuemento expliaremos la siguiente parte de lo
+explicado anteriormente en la primera gía de Samba AD DC
+para Windows en el que os enseñamos como instalar todo
+lo necesario para que el samba ad dc simulara un
+windows server para en este pueda alojar clientes
+de sistema operativo y además la post
+configuración la haremos con un cliente windows
+mediante las herremientas de RSAT.
+
+Primero deberiamos cambiar las propidades de red
+para que como DNS primario apunte a la ip de
+nuestro Samba AD DC.
+
+Como llegar a cambiar DNS primario:
+
+Panel de control > Redes de internet > Centro de
+redes y recursos compartidos > Cambiar
+configuración del adaptador > Ethernet >
+Propiedades > Protocolo de internet versión 4
+(TCP / IPv4)
+
+Después tendremos que ir a introducir el equipo
+al dominio desde Configuración en Acerca de.
+
+Como llegar a introducir el equipo al dominio:
+
+Configuración > Sistema > Acerca de > Cambiar
+el nombre de este equipo (avanzado) > Cambiar >
+Selecionar dominio > Poner el nombre del dominio
+> Aceptar > Meter credenciales del adminstrador >
+Aceptar > Reiniciar el equipo
+
+A continuación descargaremos las herramientas
+esenciales de RSAT, para ello no iremos a 
+Configuración > Aplicaciones > Caracteristicas
+opcionales > Agregar caracteristica
+
+Instalaremos las siguientes:
+
+- RSAT: Herramientas de Active Directory Domain
+  Services y Lightweight Directory Services
+- RSAT: Herramientas de administración de
+  directivas de grupo
+- RSAT: Herramienta de servidor DNS
+
+Servidor DNS
+
+Al abirse nos preguntara cual es el servidor DNS
+le tendremos que especificar la ip del Samba AD
+DC.
+
+Vermos lo ca haya en la zona directa de
+<nuestro-dominio>.local
+
+Si queremos podemos agragar host nuevos o CNAMES
+
+En nuestro caso nos iremos a crear la zona
+inversa para que el DNS nos pueda responder
+correctamente.
+
+Click derecho en Zona de búsqueda inversa > Zona
+principal > Para todos los servidores DNS que se
+ejecutan en controladores de dominio en este
+dominio: <nuestro-dominio>.local > Zona de
+búsqueda inversa para  IPv4 > Asignar la ip de
+red donde se ubica el dominio > Permitir 
+actualizaciones dinámicas seguras > Finalizar
+
+Posterior menten tendriamos que añadir todos los
+registros PTR de los host de la zona de búsqueda
+directa porque automaticamente no nos los genera
+aún marcando la casilla.
+
+Usuarios y grupos de active directory
+
+Al abrir estó se nos muestra una ventana con
+toda la informacion basica del dominio, como:
+equipos dentro del dominio, usuarios nocesarios
+y creaqdos por el dominio de active directory,
+informacion sobre quienes son los controladores,
+del dominio en nuestro caso la maquina linux con
+Samba AD DC, etc.
+
+Nosotros aprtir de hay podremos crwar nuestra
+estuctura metiendo unidades organizativas,
+usuarios, grupos, etc.
+
+Administración de directivas de grupo
+
+Con ello podremos realizar la configuración de
+las directivas del dominio, si no quieres comerte
+la cabeza puedes editarlo para todos en la
+política por defecto y sino puedes generar tu una
+política por unidad organizativa si te interesa.
