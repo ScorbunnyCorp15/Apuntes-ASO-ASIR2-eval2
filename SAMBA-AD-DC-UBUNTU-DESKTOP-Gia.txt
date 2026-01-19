@@ -1,0 +1,140 @@
+Cambiar hostname
+
+sudo hostnamectl set-hostname ud01
+hostname -f
+
+Configurar archivo /etc/hosts
+
+sudo nano /etc/hosts
+IP_UBU_SAMBA_AD_DC     <nuestro-dominio>.local
+<nuestro-dominio>
+IP_UBU_SAMBA_AD_DC     dc.<nuesto-dominio>.local
+dc
+
+Comprobamos conexión
+
+ping -c2 clockwork.local
+
+Instalar NTPDATE
+
+sudo apt-get install ntpdate
+sudo ntpdate -q <nuestro-dominio>.local
+sudo ntpdate <nuestro-dominio>.local
+
+Instalar paquetes necesarios
+
+sudo apt-get install samba krb5-config krb5-user
+winbind libpam-winbind libnss-winbind
+<NUESTRO-DOMINIO>.LOCAL
+dc.<nuestro-dominio>.local
+dc.<nuestro-dominio>.local
+
+Comprobar autenticación en el servidor de Kerberos
+mediante el administrador de usuarios
+
+kinit administrator@<NUESTRO-DOMINIO>.LOCAL
+klist
+
+Mover archivo smb.conf y crear copia de seguridad
+
+mv /etc/samba/smb.conf /etc/samba/smb.conf.initial
+
+Crear archivo smb.conf vacio.
+
+nano /etc/samba/smb.conf 
+
+[global]
+        workgroup = <NUESTRO-DOMINIO>
+        realm = <NUESTRO-DOMINIO>.LOCAL
+        netbios name = ud01
+        security = ADS
+        dns forwarder = IP_UBU_SAMBA_AD_DC
+
+idmap config * : backend = tdb
+idmap config *:range = 50000-1000000
+
+   template homedir = /home/%D/%U
+   template shell = /bin/bash
+   winbind use default domain = true
+   winbind offline logon = false
+   winbind nss info = rfc2307
+   winbind enum users = yes
+   winbind enum groups = yes
+
+  vfs objects = acl_xattr
+  map acl inherit = Yes
+  store dos attributes = Yes
+
+Reiniciar todos los daemons de samba
+
+sudo systemctl restart smbd nmbd 
+
+Detener los servicios innecesarios
+
+sudo systemctl stop samba-ad-dc
+
+Habilitar los servicios de samba
+
+sudo systemctl enable smbd nmbd
+
+Unir Ubuntu Desktop a SAMBA AD DC
+
+sudo net ads join -U administrator
+
+Listar equipos SAMBA AD
+
+sudo samba-tool computer list
+
+CONFIGURAR AUTENTICACIÓN DE CUENTAS AD
+
+Editar el archivo de configuración del conmutador
+de servicio de nombres (NSS).
+
+sudo nano /etc/nsswitch.conf
+passwd:       compat winbind
+group:        compat winbind
+shadow:       compat winbind
+hosts:        files dns
+
+Reinicar servicio winbind
+
+sudo systemctl restart winbind
+
+Comprobar si Ubuntu Destkop se integró al dominio.
+
+wbinfo -u
+wbinfo -g
+
+Verificar el módulo Winbind nsswitch con el
+comando getent.
+
+sudo getent passwd| grep administrator
+sudo getent group|grep 'domain admins'
+id administrator
+
+Configurar pam-auth-update para autenticarnos con
+cuentas de dominio y que se creen automáticamente
+los directorios.
+
+sudo pam-auth-update
+
+Editar el archivo /etc/pam.d/common-account
+para crear automáticamente directorios.
+
+nano /etc/pam.d/common-account
+
+Añadir al final del archivo.
+
+session    required    pam_mkhomedir.so    skel=/etc/skel/    umask=0022
+
+Autenticarse con cuenta Samba AD
+
+su administrator
+
+Añadir cuenta de dominio con privilegios root
+
+sudo usermod -aG sudo administrator
+
+Autenticarse con GUI
+
+administrator@<nuestro-dominio>.local
