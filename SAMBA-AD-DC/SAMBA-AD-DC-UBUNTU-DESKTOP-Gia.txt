@@ -13,7 +13,7 @@ dc
 
 Comprobamos conexión
 
-ping -c2 clockwork.local
+ping -c2 <nuesto-dominio>.local
 
 Instalar NTPDATE
 
