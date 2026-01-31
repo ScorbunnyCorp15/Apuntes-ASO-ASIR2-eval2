@@ -1,0 +1,150 @@
+Lo primero que tenemos que tener encuenta es que para realizar la práctica
+necesitamos tener un Windows Server con Active Directory instalado y por
+lo menos con una unidad organizativa, un usuario y un grupo, da igual
+en los nombres de cada uno de los elementos necesarios mencionados. En mi
+caso tengo una unidad organizativa (OU) que se llama Super, un usuario que
+se llama deadpool y un grupo que se llama super. Pero no tenes que usar
+estos nombres, pueden ser otros.
+
+En cuanto tengamos todo eso podremos ir al Ubuntu Desktop (cliente linux
+Ubuntu) para poderlo unir al dominio que tenemos que añadirlo, en mi caso
+el dominio se llama marvel.local, pero puede variar.
+
+Lo primero que deberemos de hacer el descargar e instalar todas las
+actualizaciones pendiente, para ello usaremos el siguiente comando:
+
+sudo apt update && sudo apt upgrade -y && sudo apt dist-upgrade -y
+
+Despues intalaremos los paquetes necesarios para poder unir el cliente al
+dominio, en caso que al instalar los paquetes nos salga el asistente lo
+omiteiremos dandole a aceptar, el comando para instalr los paquetes es
+el siguiente:
+
+sudo apt install samba krb5-user winbind libnss-winbind libpam-winbind –y
+
+Despues lo que haremos sera 2 posibles comandos para hacer una copia del 
+fichero por si cambiamos algo para volver al estado anterior, aunque
+apartir de este momento lo devermos de hacer antes de implementar los 
+cambios que se os mencionan en esta documentación. Esos comandos son
+los siguientes:
+
+sudo cp /<uta-completa-hasta-fichero>/<nombre-fichero>
+/<uta-completa-hasta-fichero>/<nombre-fichero>.bak
+
+sudo mv /<uta-completa-hasta-fichero>/<nombre-fichero>
+/<uta-completa-hasta-fichero>/<nombre-fichero>.bak
+
+Aquí te voy a listar los ficheros que vas ha necesitar hacer copias,
+dejare las rutas completas hacia los ficheros para que vamos a modificar
+para que no tengas problemas y luego cuando vallamos a modificar los
+ficreros puedes cojer de aquí para juntarlas con los comandos de editar
+archivos que son con el comando "sudo nano".
+
+- /etc/hosts
+- /etc/resolv.conf
+- /etc/krb5.conf
+- /etc/samba/smb.conf
+
+Ahora empezaremos a editar cada fichero mencionado, os dejare también
+aqui mismo la configuración que debereis de aplicar en cada fichero:
+
+hosts:
+
+127.0.0.1 localhost
+127.0.1.1 ubuDesktop ubuDesktop.<nuestro-dominio>.local
+<dirección-ip-cliente> ubuDesktop ubuDesktop.<nuestro-dominio>.local
+<dirección-ip-servidor> S1WIN.<nuestro-dominio>.local
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+
+resolv:
+
+# This is /run/systemd/resolve/stub-resolv.conf managed by man:systemd-resolved(8).
+# Do not edit.
+#
+# This file might be symlinked as /etc/resolv.conf. If you're looking at
+# /etc/resolv.conf and seeing this text, you have followed the symlink.
+#
+# This is a dynamic resolv.conf file for connecting local clients to the
+# internal DNS stub resolver of systemd-resolved. This file lists all
+# configured search domains.
+#
+# Run "resolvectl status" to see details about the uplink DNS servers
+# currently in use.
+#
+# Third party programs should typically not access this file directly, but only
+# through the symlink at /etc/resolv.conf. To manage man:resolv.conf(5) in a
+# different way, replace this symlink by a static file or a different symlink.
+#
+# See man:systemd-resolved.service(8) for details about the supported modes of
+# operation for /etc/resolv.conf.
+domain <nuestro-dominio>.local
+search <nuestro-dominio>.local
+nameserver <dirección-ip-servidor>
+options edns0 trust-ad
+
+krb5:
+
+[logging]
+   default = FILE:/var/log/krb5libs.log
+   kdc = FILE:/var/log/krb5kdc.log
+   admin_server = FILE:/var/log/kadmind.log
+[libdefaults]
+   default_realm = <NUESTRO-DOMINIO>.LOCAL
+   ticket_lifetime = 24h
+   forwardable = yes
+[appdefaults]
+   pam = {
+       debug = false
+       ticket_lifetime = 36000
+       renew_lifetime = 36000
+       forwardable = true
+       krb4_convert = false
+   }
+
+smb:
+
+[global]
+   workgroup = <NUESTRO-DOMINIO>
+   server string Samba Server Version %v
+   security = ads
+   realm = <NUESTRO-DOMINIO>.LOCAL
+   socket options = TCP_NODEALY IPTOS_LOWDELAY SO RCVBUF=131072 SO_SNDBUF=131072
+   use sendfile = true
+
+   idmap config * : backend = tdb
+   idmap config * : range = 100000-299999
+   idmap config TEST : backend = tdb
+   idmap config TEST : range = 100000-299999
+   winbind separator = +
+   winbind enum users = yes
+   winbind enum groups = yes
+   winbind use default domain = yes
+   winbind use refresh tickets = yes
+
+   restrict anonymous = 2
+   log file = /var/log/samba/log.%m
+   max log size  = 50
+
+Despues realizaremos dos comandos para ver si nuestro cliente puede probar
+la conexión con el usuario administrador de nuestro dominio y hacemas
+si se le da el acceso mediante un ticket. Si no nos dan error estos
+comandos no deveria de salir en la pantalla como la información de un
+ticket de valided del usuario administrador de nuestro servidor.
+
+sudo kinit Administrador@<NUESTRO-DOMINIO>.LOCAL
+
+sudo klist
+
+Antes de terminar introduciremos un comando para unir el cliente a
+nuesto dominio al pones el comando nos pedira la contraseña para 
+continuar con el proceso de union y si todo va bien nos deberia de
+salir una línea com la siguiente "Joined '<nombre-de-nuesto-cliente>' to
+dns domain '<nuestro-dominio>.local'":
+
+sudo net ads join –U Administrador@<NUESTRO-DOMINIO>.LOCAL
