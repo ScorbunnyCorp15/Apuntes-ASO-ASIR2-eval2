@@ -1,0 +1,46 @@
+Lo primero que necesitamos para poder empzar a realizar esta practica,
+lo que necesitaremos sera que el servidor Windows Server tenda el Active
+Directory instalado y configurado con un mínimo, 1 unidad organizativa,
+1 usuario y 1 grupo. Además de tener del DNS totalmente confiurado porque
+el Active Directory solo instala lo necesario de la zona directa, tenemos
+que crear una zona inversa con sus respectivos registros PTR. Y también
+tienen que tener tanto el servidor como el cliente de linux la fecha y
+hora sincronizadas.
+
+Al tener todo lo anterior preparado tendremos que actualizar los
+repositoeios de la maquina con el siguiente comando:
+
+sudo apt update
+
+Despues pocederemos a instalar los paqueten necesarios para poder hacer la
+union con el siguiente comando:
+
+sudo apt install sssd-ad sssd-tools realmd adcli -y
+
+Despues deveremos de cambiar dos archivos para espefificar que nuestro
+dominio se llama de una forma y que tiene dicha ip, acontinuación
+mencionare los ficheros con la ruta entera hasta ellos, además de los
+cambios a realizar:
+
+- /etc/resolv.conf
+
+nameserver <ip-servidor>
+search <nombre-domino>
+
+- /etc/systemd/resolved.conf
+
+[Resolve]
+DNS=<ip-servidor>
+Domains=<nombre-dominio>
+
+Para aplicar los cambios tendremos que lanzar el siguiente comando para
+se reinicie el servicio que resuelve los nuestros dominio y el ip como
+DNS:
+
+sudo systemctl restart systemd-resolved
+
+Después, realizaremos una busqueda de nuestro dominio con el siguiente
+comando:
+
+sudo realm discover <nuestro-dominio>
+
