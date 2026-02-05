@@ -44,3 +44,81 @@ comando:
 
 sudo realm discover <nuestro-dominio>
 
+Para después unir el equipo al dominio tendremos que meter el equipo al
+dominio tendremos que utilizar el siguiente comando:
+
+sudo realm join <nombre-servidor>.<nombre-dominio> -U
+<usuario-administrador>
+
+Si la union del equipo al dominio se cumple, nos saldra el promt
+corriente del sistema a continuación.
+
+Para ver que la configuracion de sssd esta echa y creada probaremos a
+mirar como está el fichero con el siguiente comando:
+
+sudo nano /etc/sssd/sssd.conf
+
+Si seguido hacemos un discover nos mostrara que el equipo está
+correctamente configurado y qu está configurado mediante sssd.
+
+Si hacemos lo mismo con el comando el siguente comando nos
+proporcionara información similar que con el discover:
+
+sudo reaml list
+
+Y si vamos a nuestro apartado de usuarios y equipos de nuestro dominio
+en el apartado de computer veremos que esta correctamente añadido,
+además de los propios registros A y PTR de sus sespectivas zonas en el
+DNS del domino.
+
+Ahora haremos las pruebas haver si podemos recuperar tanto algun grupo o
+usuarios espefificos.
+
+Para usuarios deberias escribir el siguiente comando:
+
+sudo getent passwd <nombre-usuario>@<nombre-dominio>
+
+Y para los usuarios deberia ser de la siguiente forma:
+
+sudo getent group <nombre-grupo>@<nombre-dominio>
+
+Ahora introduciremos un comado para decirle al equipo que al logearnos
+en el equipo cree automanticamente las carpetas home de los usuarios:
+
+sudo pam-auth-update --enable mkhomedir
+
+Como ya hemos realizado toda la configuración pertinente reiniciaremos
+el equipo con el siguiente comando:
+
+sudo reboot
+
+Al reiniciarlo nos metemos en el usario principal a la terminal y
+primero realizaremos la configuración usaremos el siguiente comando:
+
+sudo realm list
+
+Después pararemos el servicio, lo encenderemos otra vez y veremos que no
+está en mal estado con la diguente cadena de comandos:
+
+sudo systemctl stop sssd
+sudo systemctl start sssd
+sudo systemctl status sssd
+
+Ahora como ultimas comprobaciones lo que haremos será entrar a cualquier
+usuario del domino mediante 2 formas por termianal y entorno gráfico,
+para ello tendremos que hacer lo siguiente:
+
+- Terminal
+
+su -l <nombre-usuario>@<nombre-dominio>
+
+Si todo va vien nos devolvera in prompt con el <nombre-usuario>@
+<nombre-dominio>@<nombre-equipo>
+
+- Entorno gráfico
+
+Para hacer la prubas del entorno grfico tendremos que cerrar la sesión
+del usuario que estemos actualmente logeados, darle a la sigiente opción
+"¿No está en la lista?" darle el <nombre-usuario>@<nombre-dominio> y
+acontinuación especificarle la contraseña, si todo ba bien nos
+tendríamos que haber logeado con el usuario correctamente.
