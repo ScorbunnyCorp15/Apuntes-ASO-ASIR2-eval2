@@ -7,7 +7,7 @@ sudo hostnamectl set-hostname dc
 Modificar fichero hosts
 
 sudo nano /etc/hosts
-192.168.1.8 dc.<nuestro-nombre>.local dc
+192.168.1.8 dc.<nuestro-dominio>.local dc
 
 Verificar el FQDN
 hostname -f
@@ -15,7 +15,7 @@ hostname -f
 Verificar si el FQDN es capaz de resolver la dirección Ip del
 Samba
 
-ping -c2 dc.<nuestro-nombre>.local
+ping -c2 dc.<nuestro-dominio>.local
 
 Desactivar servicio systemd-resolved
 
@@ -33,7 +33,7 @@ Añadimos las siguientes líneas:
 
 nameserver 192.168.1.8
 nameserver 1.1.1.1
-search dc.<nuestro-nombre>.local
+search dc.<nuestro-dominio>.local
 
 Hacemos inmutable al archivo /etc/resolv.conf para que no pueda
 cambiar
@@ -44,17 +44,15 @@ INSTALACIÓN SAMBA
 
 Actualizar el índice de paquetes
 
-sudo apt update && apt upgrade -y && sudo apt dist-upgrade -y
+sudo apt update && sudo apt upgrade -y && sudo apt dist-upgrade -y
 
 Instalar samba con sus paquetes y dependencias
 
-sudo apt install -y acl attr samba samba-dsdb-modules
-samba-vfs-modules smbclient winbind libpam-winbind libnss-winbind
-libpam-krb5 krb5-config krb5-user dnsutils chrony net-tolos -y
+sudo apt install acl attr samba samba-dsdb-modules samba-vfs-modules smbclient winbind libpam-winbind libnss-winbind libpam-krb5 krb5-config krb5-user dnsutils chrony net-tools -y
 
-CLOCKWORK.LOCAL
-dc.<nuestro-nombre>.local
-dc.<nuestro-nombre>.local
+<NUESTO-DOMINIO>
+dc.<nuestro-dominio>.local
+dc.<nuestro-dominio>.local
 
 Detener y deshabilitar los servicios que el servidor de
 Active Directory de Samba no requiere (smbd, nmbd y winbind)
@@ -77,8 +75,8 @@ Samba Active Directory.
 
 sudo samba-tool domain provision
 
-Realm: <NUESTRO-NOMBRE>.LOCAL
-Domain: <NUESTRO-NOMBRE>
+Realm: <NUESTRO-DOMINIO>.LOCAL
+Domain: <NUESTRO-DOMINIO>
 Server Role: dc
 DNS backend: SAMBA_INTERNAL
 DNS forwarder IP address: 1.1.1.1
@@ -138,24 +136,24 @@ VERIFICAR SAMBA ACTIVE DIRECTORY
 
 Verificar nombres de dominio
 
-host -t A <nuestro-nombre>.local
-host -t A dc.<nuestro-nombre>.local
+host -t A <nuestro-dominio>.local
+host -t A dc.<nuestro-dominio>.local
 
 Verificar que los registros de servicio kerberos y ldap apunten al
 FQDN de su servidor Samba Active Directory.
 
-host -t SRV _kerberos._udp.<nuestro-nombre>.local
-host -t SRV _ldap._tcp.<nuestro-nombre>.local
+host -t SRV _kerberos._udp.<nuestro-dominio>.local
+host -t SRV _ldap._tcp.<nuestro-dominio>.local
 
 Verificar los recursos predeterminados disponibles en Samba Active
 Directory.
 
-smbclient -L clockwork.local -N
+smbclient -L <nuestro-dominio>.local -N
 
 Comprobar autenticación en el servidor de Kerberos mediante el
 administrador de usuarios.
 
-kinit administrator@<NUESTRO-NOMBRE>.LOCAL
+kinit administrator@<NUESTRO-DOMINIO>.LOCAL
 klist
 
 Iniciar sesión en el servidor a través de smb

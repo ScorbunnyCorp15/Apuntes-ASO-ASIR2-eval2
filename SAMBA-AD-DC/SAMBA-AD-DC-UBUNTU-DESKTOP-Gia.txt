@@ -24,7 +24,7 @@ sudo ntpdate <nuestro-dominio>.local
 Instalar paquetes necesarios
 
 sudo apt-get install samba krb5-config krb5-user
-winbind libpam-winbind libnss-winbind
+winbind libpam-winbind libnss-winbind -y
 <NUESTRO-DOMINIO>.LOCAL
 dc.<nuestro-dominio>.local
 dc.<nuestro-dominio>.local
