@@ -1,0 +1,89 @@
+Lo primero que tenemos que hacer el servidor es instalar LDAP con sus
+paqueten necesraios y reconfigurar uno de ello, para que nuestro dominio
+sea lab.local, para ello introduciremos los siguientes comandos:
+
+sudo apt update && sudo apt install slapd ldap-utils -y
+sudo dpkg-reconfigure slapd
+
+Despues crearemos un usuarios.ldif que contenga el siguente texto:
+
+dn: ou=usuarios,dc=lab,dc=local
+objectClass: organizationalUnit
+ou: usuarios
+
+dn: uid=estudiante1,ou=usuarios,dc=lab,dc=local
+objectClass: inetOrgPerson
+objectClass: posixAccount
+uid: estudiante1
+cn: Estudiante 1
+sn: Prueba
+uidNumber: 1001
+gidNumber: 1001
+homeDirectory: /home/estudiante1
+userPassword: pass123
+
+Y ahora añadiremos la configuracion de usuarios.ldif al dominio creado de
+LDAP:
+
+sudo ldapadd -x -D "cn=admin,dc=lab,dc=local" -W -f usuarios.ldif
+
+A continuación, iremos al cliente ubuntu y actualicaremos los repositorios
+de el ademas de instala todos los paquetes necesarios para está practica:
+
+sudo apt update
+sudo apt install sssd sssd-ldap sssd-tools nscd ldap-utils -y
+
+Despues crearemos un fichero que se llama sssd.conf en la ruta /etc/sssd
+con el siguente texto en su interior:
+
+[sssd]
+domains = lab.local
+config_file_version = 2
+services = nss, pam
+
+[domain/lab.local]
+id_provider = ldap
+auth_provider = ldap
+chpass_provider = ldap
+access_provider = permit
+ldap_uri = ldap://<ip-servidor>
+ldap_search_base = dc=lab,dc=local
+ldap_user_search_base = ou=usuarios,dc=lab,dc=local
+ldap_user_object_class = posixAccount
+ldap_user_name = uid
+ldap_group_object_class = posixGroup
+ldap_group_name = cn
+cache_credentials = true
+enumerate = false
+
+Después, le asignaremos sus permisos con el siguiente comando:
+
+sudo chmod 600 /etc/sssd/sssd.conf
+
+Y tambien habilitaremos que 2 paquetes esten listos para escuchas desde
+el momento en que encendamos la maquina con el siguiente comando:
+
+sudo systemctl enable --now sssd nscd
+
+Después miraremos que el fichero /etc/nsswitch.conf tenga lo siguente
+escrito:
+
+passwd: files sss
+group: files sss
+shadow: files sss
+
+A continuación miraremos que el SSSD Authenticarion esté activado con el
+siguiente comando:
+
+sudo pam-auth-update
+
+Despues haremos dos comprobaciones de que el ubuntu cliente puede recojer
+el usuario de estudiante1 con dos comandos distintos:
+
+getent passwd estudiante1
+id estudiante1
+
+Y hasta aquí es la practica, poque los siguentes comandos que aparecen no
+funcionan no sabemos porque despues de tantos intentos haciendo que
+podamos termiar la practica, pero no se a podido realizar más cosas en
+ella.
