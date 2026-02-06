@@ -17,7 +17,7 @@ ping -c2 <nuesto-dominio>.local
 
 Instalar NTPDATE
 
-sudo apt-get install ntpdate
+sudo apt install ntpdate -y
 sudo ntpdate -q <nuestro-dominio>.local
 sudo ntpdate <nuestro-dominio>.local
 
@@ -37,7 +37,7 @@ klist
 
 Mover archivo smb.conf y crear copia de seguridad
 
-mv /etc/samba/smb.conf /etc/samba/smb.conf.initial
+sudo mv /etc/samba/smb.conf /etc/samba/smb.conf.initial
 
 Crear archivo smb.conf vacio.
 
